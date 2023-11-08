@@ -8,16 +8,16 @@ export const ACTIONS = {
   ADD_PHOTO_TO_FAV: 'ADD_PHOTO',
   REMOVE_PHOTO_FROM_FAV: 'REMOVE_PHOTO',
   SELECT_PHOTO: "SELECT_PHOTO",
-  CLOSE_MODAL: "CLOSE_MODAL"
+  CLOSE_MODAL: "CLOSE_MODAL",
 }
 
 const reducer = (state, action) => {
   switch (action.type) {
     case ACTIONS.ADD_PHOTO_TO_FAV:
-      return { ...state, favourite: [...state.favourite, action.value] }
+      return { ...state, favourites: [...state.favourites, action.value] }
 
     case ACTIONS.REMOVE_PHOTO_FROM_FAV:
-      return { ...state, favourite: state.favourite.filter((id) => id !== action.value) }
+      return { ...state, favourites: state.favourites.filter((id) => id !== action.value) }
 
     case ACTIONS.SELECT_PHOTO:
       return { ...state, modal: action.value }
@@ -39,7 +39,7 @@ const reducer = (state, action) => {
 const initialState = {
   photos: [],
   topics: [],
-  favourite: [],
+  favourites: [],
   modal: null
 }
 
@@ -48,7 +48,7 @@ const useApplicationData = () => {
   const [state, dispatch] = useReducer(reducer, initialState)
 
   const toggleFav = (photoId) => {
-    if (state.favourite.includes(photoId)) {
+    if (state.favourites.includes(photoId)) {
       return dispatch({ type: ACTIONS.REMOVE_PHOTO_FROM_FAV, value: photoId })
     }
     dispatch({ type: ACTIONS.ADD_PHOTO_TO_FAV, value: photoId })
@@ -62,15 +62,21 @@ const useApplicationData = () => {
     dispatch({ type: ACTIONS.CLOSE_MODAL })
   }
 
+  const fetchPhotosByTopicId = (topicId) => {
+    fetch(`/api/topics/photos/${topicId}`)
+      .then(res => res.json())
+      .then((photoArray) => dispatch({ type: ACTIONS.SET_PHOTO_DATA, value: photoArray }))
+  }
+
   useEffect(() => {
     fetch('/api/photos')
-      .then((res) => (res.json()))
+      .then(res => res.json())
       .then((photoArray) => dispatch({ type: ACTIONS.SET_PHOTO_DATA, value: photoArray }))
   }, [])
 
   useEffect(() => {
     fetch('/api/topics')
-      .then((res) => res.json())
+      .then(res => res.json())
       .then((topicsArray) => dispatch({ type: ACTIONS.SET_TOPIC_DATA, value: topicsArray }))
   }, [])
 
@@ -78,7 +84,8 @@ const useApplicationData = () => {
     state,
     toggleFav,
     showModal,
-    closeModal
+    closeModal,
+    fetchPhotosByTopicId
   }
 }
 
