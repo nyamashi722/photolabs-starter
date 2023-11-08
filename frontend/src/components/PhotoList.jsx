@@ -2,7 +2,7 @@ import React from "react";
 import PhotoListItem from "./PhotoListItem";
 import "../styles/PhotoList.scss";
 
-const PhotoList = ({ photos, favourite, toggleFav, showModal, similarPhotos, modal }) => {
+const PhotoList = ({ photos, favourites, toggleFav, showModal, similarPhotos, modal}) => {
 
   const photoArray = photos.map((photo) => {
     return (
@@ -11,24 +11,24 @@ const PhotoList = ({ photos, favourite, toggleFav, showModal, similarPhotos, mod
         photoObj={{ ...photo }}
         key={photo.id}
         photoId={photo.id}
-        favourite={favourite}
+        favourites={favourites}
         toggleFav={toggleFav}
         showModal={showModal}
       />
     )
   })
 
-  const similarPhotosArray = !!modal ? similarPhotos.map((similarPhoto) => {
+  const similarPhotosArray = !!modal && similarPhotos.map((similarPhoto) => {
     return (
       <PhotoListItem
         {...similarPhoto}
         key={similarPhoto.id}
         photoId={similarPhoto.id}
-        favourite={favourite}
+        favourites={favourites}
         toggleFav={toggleFav}
       />
     )
-  }) : null;
+  });
 
   return (
     <ul className="photo-list">

@@ -3,8 +3,8 @@ import FavIcon from './FavIcon';
 
 import '../styles/FavBadge.scss';
 
-const FavBadge = ({favourite}) => {
-  const isFavPhotoExist = favourite.length >= 1
+const FavBadge = ({favourites}) => {
+  const isFavPhotoExist = favourites.length >= 1
 
   return (
     <div className='fav-badge'>
